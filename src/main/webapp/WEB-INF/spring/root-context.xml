@@ -16,39 +16,45 @@
 	
 	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
 	
-	<!-- <bean id="ds" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+	<!-- <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
 		<property name="driverClass" value="com.mysql.cj.jdbc.Driver"/>
 		<property name="url" value="jdbc:mysql://127.0.0.1:3306/ssafyweb?serverTimezone=UTC&amp;useUniCode=yes&amp;characterEncoding=UTF-8"/>
 		<property name="username" value="ssafy"/>
 		<property name="password" value="ssafy"/>
 	</bean> -->
 	
-	<bean id="ds" class="org.springframework.jndi.JndiObjectFactoryBean">
+	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
 		<property name="jndiName" value="java:comp/env/jdbc/ssafy"></property>
 	</bean>
 	
-	<bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="ds"></property>
-		<property name="typeAliasesPackage" value="com.ssafy.*.model"></property>
-		<property name="mapperLocations" value="classpath:mapper/*.xml"></property>
-		<!-- <property name="configLocation" value="classpath:mapper/mybatis-config.xml"></property>
+	<!-- <bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="configLocation" value="classpath:mybatis-config.xml"/>
 		<property name="mapperLocations">
 			<list>
 				<value>classpath:mapper/member.xml</value>
 				<value>classpath:mapper/board.xml</value>
 			</list>
-		</property> -->
+		</property>
+	</bean> -->
+	
+	<bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="typeAliasesPackage" value="com.ssafy.*.model"/>
+		<property name="mapperLocations" value="classpath:mapper/*.xml"/>
 	</bean>
 	
 	<!-- <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg ref="sqlSessionFactoryBean"></constructor-arg>
 	</bean> -->
 	
+	<!-- mybatis에서 제공하는 scan 태그를 통해 repository(Mapper) interface들의 위치를 지정. -->
 	<mybatis-spring:scan base-package="com.ssafy.*.model.mapper"/>
 	
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="ds"></property>
+		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
 	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
 </beans>

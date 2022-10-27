@@ -2,8 +2,8 @@ package com.ssafy.util;
 
 public class PageNavigation {
 	
-	private boolean startRange;	// 이전 버튼 활성화 여부
-	private boolean endRange;	// 다음 버튼 활성화 여부
+	private boolean startRange;
+	private boolean endRange;
 	private int totalCount;
 	private int newCount;
 	private int totalPageCount;

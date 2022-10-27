@@ -24,6 +24,7 @@
                 <input type="hidden" name="pgno" value="1"/>
                 <select
                   class="form-select form-select-sm ms-5 me-1 w-50"
+                  id="skey"
                   name="key"
                   aria-label="검색조건"
                 >
@@ -32,7 +33,7 @@
                   <option value="userid">작성자</option>
                 </select>
                 <div class="input-group input-group-sm">
-                  <input type="text" class="form-control" name="word" placeholder="검색어..." />
+                  <input type="text" class="form-control" id="sword" name="word" placeholder="검색어..." />
                   <button id="btn-search" class="btn btn-dark" type="button">검색</button>
                 </div>
               </form>
@@ -87,6 +88,16 @@
       <input type="hidden" id="articleno" name="articleno" value="">
     </form>
     <script>
+	    var sel = document.getElementById("skey");
+			for(var i=0; i<sel.length; i++){
+				if(sel[i].value == "${key}"){
+					sel[i].selected = true;
+				}
+			}
+			
+			if("${word}" != "")
+				document.getElementById("sword").value = "${word}";
+	
       let titles = document.querySelectorAll(".article-title");
       titles.forEach(function (title) {
         title.addEventListener("click", function () {

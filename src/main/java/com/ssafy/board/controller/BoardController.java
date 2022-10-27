@@ -101,7 +101,7 @@ public class BoardController {
 
 	@GetMapping("/list")
 	public ModelAndView list(@RequestParam Map<String, String> map) throws Exception {
-		logger.debug("list parameter pgno : {}", map.get("pgno"));
+		logger.debug("list parameter : {}", map);
 		ModelAndView mav = new ModelAndView();
 //		try {
 		List<BoardDto> list = boardService.listArticle(map);
@@ -161,7 +161,7 @@ public class BoardController {
 	public String delete(@RequestParam("articleno") int articleNo, @RequestParam Map<String, String> map,
 			RedirectAttributes redirectAttributes) throws Exception {
 		logger.debug("delete articleNo : {}", articleNo);
-		boardService.deleteArticle(articleNo);
+		boardService.deleteArticle(articleNo, servletContext.getRealPath("/upload"));
 		redirectAttributes.addAttribute("pgno", map.get("pgno"));
 		redirectAttributes.addAttribute("key", map.get("key"));
 		redirectAttributes.addAttribute("word", map.get("word"));

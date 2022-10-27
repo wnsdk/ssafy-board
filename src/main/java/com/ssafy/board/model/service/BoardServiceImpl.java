@@ -1,5 +1,6 @@
 package com.ssafy.board.model.service;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.board.model.BoardDto;
+import com.ssafy.board.model.FileInfoDto;
 import com.ssafy.board.model.mapper.BoardMapper;
 import com.ssafy.util.PageNavigation;
 import com.ssafy.util.SizeConstant;
@@ -19,24 +21,27 @@ public class BoardServiceImpl implements BoardService {
 	private BoardMapper boardMapper;
 
 	@Autowired
-	public BoardServiceImpl(BoardMapper boardDao) {
-		this.boardMapper = boardDao;
+	public BoardServiceImpl(BoardMapper boardMapper) {
+		this.boardMapper = boardMapper;
 	}
 
 	@Override
 	@Transactional
-	public int writeArticle(BoardDto boardDto) throws Exception {
+	public void writeArticle(BoardDto boardDto) throws Exception {
+		System.out.println("글입력 전 dto : " + boardDto);
 		boardMapper.writeArticle(boardDto);
-		// 파일이 있다면
-		boardMapper.registerFile(boardDto);
-		return 1;
+		System.out.println("글입력 후 dto : " + boardDto);
+		List<FileInfoDto> fileInfos = boardDto.getFileInfos();
+		if (fileInfos != null && !fileInfos.isEmpty()) {
+			boardMapper.registerFile(boardDto);
+		}
 	}
 
 	@Override
 	public List<BoardDto> listArticle(Map<String, String> map) throws Exception {
 		Map<String, Object> param = new HashMap<String, Object>();
 		String key = map.get("key");
-		if("userid".equals(key))
+		if ("userid".equals(key))
 			key = "b.user_id";
 		param.put("key", key == null ? "" : key);
 		param.put("word", map.get("word") == null ? "" : map.get("word"));
@@ -57,13 +62,13 @@ public class BoardServiceImpl implements BoardService {
 		int currentPage = Integer.parseInt(map.get("pgno"));
 
 		pageNavigation.setCurrentPage(currentPage);
+		pageNavigation.setNaviSize(naviSize);
 		Map<String, Object> param = new HashMap<String, Object>();
 		String key = map.get("key");
-		if("userid".equals(key))
+		if ("userid".equals(key))
 			key = "user_id";
 		param.put("key", key == null ? "" : key);
 		param.put("word", map.get("word") == null ? "" : map.get("word"));
-		pageNavigation.setNaviSize(naviSize);
 		int totalCount = boardMapper.getTotalArticleCount(param);
 		pageNavigation.setTotalCount(totalCount);
 		int totalPageCount = (totalCount - 1) / sizePerPage + 1;
@@ -94,8 +99,14 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	@Transactional
-	public void deleteArticle(int articleNo) throws Exception {
+	public void deleteArticle(int articleNo, String path) throws Exception {
+		List<FileInfoDto> fileList = boardMapper.fileInfoList(articleNo);
+		boardMapper.deleteFile(articleNo);
 		boardMapper.deleteArticle(articleNo);
+		for(FileInfoDto fileInfoDto : fileList) {
+			File file = new File(path + File.separator + fileInfoDto.getSaveFolder() + File.separator + fileInfoDto.getSaveFile());
+			file.delete();
+		}
 	}
 
 }
