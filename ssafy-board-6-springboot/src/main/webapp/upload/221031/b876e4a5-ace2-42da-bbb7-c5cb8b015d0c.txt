@@ -1,0 +1,45 @@
+js 키워드
+this
+콜백함수
+화살표함수
+
+기타 키워드
+SPA Single Page Application
+SSR Server Side Rendering	-> 서버에서 응답페이지를 다 만들어서 줌
+CSR Client Side Rendering	-> 필요한 데이터만 클라이언트에 넘겨주고, 그러고 나서 페이지가 완성됨
+
+스프링 관련 키워드
+
+.jar
+.war
+maven
+gradle
+jdbc
+mybatis
+jackson
+커넥션풀
+jndi
+DI
+Bean
+IoC
+웹MVC
+lombock
+Catalina
+톰캣
+Controller
+Service
+Dao
+Dto
+Mapper
+web.xml
+servlet-context.xml
+root-context.xml
+JPA
+Hibernate
+Interceptor
+ViewResolver
+REST API
+Swagger
+ajax
+세션 쿠키 캐시
+csv json xml
